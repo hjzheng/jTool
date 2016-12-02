@@ -1,32 +1,30 @@
-'use strict';
+import utilities from './utilities';
 
-var utilities = require('../src/utilities');
-
-describe('utilities', function() {
+describe('utilities', () => {
 
 	var nodeList = null;
 	var divEle = null;
 
-	beforeEach(function() {
+	beforeEach(() => {
 		divEle = document.createElement('div');
 		document.body.appendChild(divEle);
 		nodeList = document.querySelectorAll('div');
 	});
 
-	afterEach(function() {
+	afterEach(() => {
 		document.body.removeChild(divEle);
 		nodeList = null;
 		divEle = null;
 	});
 
-	it('isArray', function() {
+	it('isArray', () => {
 		expect(utilities.isArray([])).toBe(true);
 		expect(utilities.isArray({})).toBe(false);
-		expect(utilities.isArray(function(){})).toBe(false);
+		expect(utilities.isArray(function () {})).toBe(false);
 		expect(utilities.isArray(123)).toBe(false);
 	});
 
-	it('type', function() {
+	it('type', () => {
 		expect(utilities.type(undefined)).toBe('undefined');
 		expect(utilities.type(null)).toBe('null');
 		expect(utilities.type(true)).toBe('boolean');
@@ -35,7 +33,7 @@ describe('utilities', function() {
 		expect(utilities.type(Number(123))).toBe('number');
 		expect(utilities.type('123')).toBe('string');
 		expect(utilities.type(String('123'))).toBe('string');
-		expect(utilities.type(function(){})).toBe('function');
+		expect(utilities.type(function () {})).toBe('function');
 		expect(utilities.type([])).toBe('array');
 		expect(utilities.type(new Array(1))).toBe('array');
 		expect(utilities.type(new Date())).toBe('date');
@@ -46,46 +44,46 @@ describe('utilities', function() {
 		expect(utilities.type(divEle)).toBe('element');
 	});
 
-	describe('each', function() {
+	describe('each', () => {
 
 		var callback = null;
 
-		beforeEach(function() {
+		beforeEach(() => {
 			callback = jasmine.createSpy('callback');
 		});
 
-		afterEach(function() {
+		afterEach(() => {
 			callback = null;
 		});
 
-		it('遍历数组', function() {
-			var arr = [1,2,3];
+		it('遍历数组', () => {
+			var arr = [1, 2, 3];
 			utilities.each(arr, callback);
 			expect(callback.calls.count()).toBe(3);
 			expect(callback.calls.argsFor(0)).toEqual([0, 1]);
 
 			var sum = 0;
-			utilities.each(arr, function(i, v) {
+			utilities.each(arr, (i, v) => {
 				sum += v;
 			});
 			expect(sum).toBe(6);
 		});
 
-		it('遍历类数组 arguments', function() {
+		it('遍历类数组 arguments', () => {
 			function test() {
 				utilities.each(arguments, callback);
 				expect(callback.calls.count()).toBe(4);
 			}
 
-			test(1,2,3,4);
+			test(1, 2, 3, 4);
 		});
 
-		it('遍历类数组 nodeList', function() {
+		it('遍历类数组 nodeList', () => {
 			utilities.each(nodeList, callback);
 			expect(callback.calls.count()).toBe(1);
 		});
 
-		it('遍历对象', function() {
+		it('遍历对象', () => {
 			var obj = {
 				'a': 1,
 				'b': 2,
@@ -96,7 +94,7 @@ describe('utilities', function() {
 			expect(callback.calls.argsFor(0)).toEqual(['a', 1]);
 		});
 
-		it('遍历 JTool 对象', function() {
+		it('遍历 JTool 对象', () => {
 			var obj = {
 				'a': 1,
 				'b': 2,
@@ -110,18 +108,18 @@ describe('utilities', function() {
 		});
 	});
 
-	it('trim', function() {
+	it('trim', () => {
 		expect(utilities.trim(' 123')).toBe('123');
 		expect(utilities.trim('123 ')).toBe('123');
 		expect(utilities.trim(' 12 3')).toBe('12 3');
 		expect(utilities.trim(' 123  ')).toBe('123');
 	});
 
-	it('error', function() {
+	it('error', () => {
 		expect(utilities.error).toThrowError(/jTool Error/);
 	});
 
-	it('isEmptyObject', function() {
+	it('isEmptyObject', () => {
 		expect(utilities.isEmptyObject({})).toBe(true);
 		expect(utilities.isEmptyObject(Object.create(null))).toBe(true);
 		expect(utilities.isEmptyObject({ a: 1 })).toBe(false);
@@ -129,20 +127,20 @@ describe('utilities', function() {
 		expect(utilities.isEmptyObject(Object.prototype)).toBe(true);
 	});
 
-	it('getStyle', function() {
+	it('getStyle', () => {
 		expect(utilities.getStyle(divEle)).toEqual(jasmine.any(Object));
 		divEle.style.fontSize = '12px';
 		expect(utilities.getStyle(divEle, 'font-size')).toBe('12px');
 	});
 
-	it('getStyleUnit', function() {
+	it('getStyleUnit', () => {
 		expect(utilities.getStyleUnit('12px')).toBe('px');
 		expect(utilities.getStyleUnit('12em')).toBe('em');
 		expect(utilities.getStyleUnit('12%')).toBe('%');
 		expect(utilities.getStyleUnit('12vem')).toBe('vem');
 	});
 
-	it('toHump', function() {
+	it('toHump', () => {
 		expect(utilities.toHump('font-size')).toBe('fontSize');
 		expect(utilities.toHump('-font-size')).toBe('FontSize');
 		expect(utilities.toHump('-font-size-')).toBe('FontSize-');
@@ -151,19 +149,20 @@ describe('utilities', function() {
 		expect(utilities.toHump('background-color')).toBe('backgroundColor');
 	});
 
-	it('toHyphen', function() {
+	it('toHyphen', () => {
 		expect(utilities.toHyphen('FontSize')).toBe('-font-size');
 		expect(utilities.toHyphen('fontSize')).toBe('font-size');
 		expect(utilities.toHyphen('FontSize-')).toBe('-font-size-');
 		expect(utilities.toHyphen('XXX')).toBe('-x-x-x');
 	});
 
-	it('isWindow', function() {
+	it('isWindow', () => {
 		expect(utilities.isWindow(window)).toBe(true);
 	});
 
-	it('createDOM', function() {
+	it('createDOM', () => {
 		expect(utilities.createDOM('<div id="haha">hahaha</div>')[0].id).toBe('haha');
 		expect(document.getElementById('jTool-create-dom')).toBe(null);
 	});
+
 });

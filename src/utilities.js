@@ -19,7 +19,7 @@ var class2type = {
 };
 
 function isChrome() {
-	return navigator.userAgent.indexOf('Chrome') == -1 ? false : true;
+	return navigator.userAgent.indexOf('Chrome') === -1;
 }
 
 function isWindow(object) {
@@ -39,7 +39,7 @@ function noop() {}
 function each(object, callback) {
 
 	// 当前为jTool对象,循环目标更换为jTool.DOMList
-	if(object && object.jTool){
+	if (object && object.jTool) {
 		object = object.DOMList;
 	}
 
@@ -48,13 +48,13 @@ function each(object, callback) {
 	// 为类数组时, 返回: index, value
 	if (objType === 'array' || objType === 'nodeList' || objType === 'arguments') {
 		// 由于存在类数组 NodeList, 所以不能直接调用 every 方法
-		[].every.call(object, function(v, i){
-			var tmp = isWindow(v) ? noop() : (v.jTool ? v = v.get(0) : noop()); // 处理jTool 对象
-			return callback.call(v, i, v) === false ? false : true;
+		[].every.call(object, (v, i) => {
+			isWindow(v) ? noop() : (v.jTool ? v = v.get(0) : noop()); // 处理jTool 对象
+			return callback.call(v, i, v) !== false;
 		});
 	} else if (objType === 'object') {
-		for(var i in object){
-			if(callback.call(object[i], i, object[i]) === false) {
+		for (var i in object) {
+			if (callback.call(object[i], i, object[i]) === false) {
 				break;
 			}
 		}
@@ -67,8 +67,8 @@ function trim(text) {
 }
 
 // 抛出异常信息
-function error(msg){
-	throw new Error('[jTool Error: '+ msg + ']');
+function error(msg) {
+	throw new Error(`[jTool Error: ${msg}]`);
 }
 
 // 检测是否为空对象
@@ -77,7 +77,7 @@ function isEmptyObject(obj) {
 	var isEmptyObj = true;
 
 	for (var pro in obj) {
-		if(obj.hasOwnProperty(pro)) {
+		if (obj.hasOwnProperty(pro)) {
 			isEmptyObj = false;
 		}
 	}
@@ -86,22 +86,22 @@ function isEmptyObject(obj) {
 }
 
 // 获取节点样式: key为空时则返回全部
-function getStyle(dom, key){
+function getStyle(dom, key) {
 	return key ? window.getComputedStyle(dom)[key] : window.getComputedStyle(dom);
 }
 
 // 获取样式的单位
 function getStyleUnit(style) {
-	var unitList = ['px', 'vem', 'em', '%'],
-		unit = '';
+	var unitList = ['px', 'vem', 'em', '%'];
+	var	unit = '';
 
 	// 样式本身为纯数字,则直接返回单位为空
-	if(typeof(style) === 'number'){
+	if (typeof style === 'number') {
 		return unit;
 	}
 
 	each(unitList, function (i, v) {
-		if(style.indexOf(v) !== -1){
+		if (style.indexOf(v) !== -1) {
 			unit = v;
 			return false;
 		}
@@ -112,14 +112,14 @@ function getStyleUnit(style) {
 
 // 字符格式转换: 连字符转驼峰
 function toHump(text) {
-	return text.replace(/-\w/g, function(str){
+	return text.replace(/-\w/g, function (str) {
 		return str.split('-')[1].toUpperCase();
 	});
 }
 
-//字符格式转换: 驼峰转连字符
+// 字符格式转换: 驼峰转连字符
 function toHyphen(text) {
-	return text.replace(/([A-Z])/g,"-$1").toLowerCase();
+	return text.replace(/([A-Z])/g, '-$1').toLowerCase();
 }
 
 // 通过html字符串, 生成DOM.  返回生成后的子节点
@@ -141,26 +141,26 @@ function createDOM(htmlString) {
 	var childNodes = jToolDOM.childNodes;
 
 	// 进行table类标签清理, 原因是在增加如th,td等table类标签时,浏览器会自动补全节点.
-	if (childNodes.length == 1 && !/<tbody|<TBODY/.test(htmlString) && childNodes[0].nodeName === 'TBODY') {
+	if (childNodes.length === 1 && !/<tbody|<TBODY/.test(htmlString) && childNodes[0].nodeName === 'TBODY') {
 		childNodes = childNodes[0].childNodes;
 	}
-	if (childNodes.length == 1 && !/<thead|<THEAD/.test(htmlString) && childNodes[0].nodeName === 'THEAD') {
+	if (childNodes.length === 1 && !/<thead|<THEAD/.test(htmlString) && childNodes[0].nodeName === 'THEAD') {
 		childNodes = childNodes[0].childNodes;
 	}
-	if (childNodes.length == 1 && !/<tr|<TR/.test(htmlString) &&  childNodes[0].nodeName === 'TR') {
+	if (childNodes.length === 1 && !/<tr|<TR/.test(htmlString) && childNodes[0].nodeName === 'TR') {
 		childNodes = childNodes[0].childNodes;
 	}
-	if (childNodes.length == 1 && !/<td|<TD/.test(htmlString) && childNodes[0].nodeName === 'TD') {
+	if (childNodes.length === 1 && !/<td|<TD/.test(htmlString) && childNodes[0].nodeName === 'TD') {
 		childNodes = childNodes[0].childNodes;
 	}
-	if (childNodes.length == 1 && !/<th|<TH/.test(htmlString) && childNodes[0].nodeName === 'TH') {
+	if (childNodes.length === 1 && !/<th|<TH/.test(htmlString) && childNodes[0].nodeName === 'TH') {
 		childNodes = childNodes[0].childNodes;
 	}
 	jToolDOM.remove();
 	return childNodes;
 }
 
-module.exports = {
+export default {
 	isWindow: isWindow,
 	isChrome: isChrome,
 	isArray: isArray,
