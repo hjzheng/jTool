@@ -1,6 +1,6 @@
-var toString = Object.prototype.toString;
+const toString = Object.prototype.toString;
 
-var class2type = {
+const class2type = {
 	'[object String]': 'string',
 	'[object Boolean]': 'boolean',
 	'[object Undefined]': 'undefined',
@@ -43,7 +43,7 @@ function each(object, callback) {
 		object = object.DOMList;
 	}
 
-	var objType = type(object);
+	const objType = type(object);
 
 	// 为类数组时, 返回: index, value
 	if (objType === 'array' || objType === 'nodeList' || objType === 'arguments') {
@@ -74,7 +74,7 @@ function error(msg) {
 // 检测是否为空对象
 function isEmptyObject(obj) {
 
-	var isEmptyObj = true;
+	let isEmptyObj = true;
 
 	for (var pro in obj) {
 		if (obj.hasOwnProperty(pro)) {
@@ -92,8 +92,8 @@ function getStyle(dom, key) {
 
 // 获取样式的单位
 function getStyleUnit(style) {
-	var unitList = ['px', 'vem', 'em', '%'];
-	var	unit = '';
+	const unitList = ['px', 'vem', 'em', '%'];
+	let	unit = '';
 
 	// 样式本身为纯数字,则直接返回单位为空
 	if (typeof style === 'number') {
@@ -125,12 +125,12 @@ function toHyphen(text) {
 // 通过html字符串, 生成DOM.  返回生成后的子节点
 // 该方法无处处理包含table标签的字符串,但是可以处理table下属的标签
 function createDOM(htmlString) {
-	var jToolDOM = document.querySelector('#jTool-create-dom');
+	let jToolDOM = document.querySelector('#jTool-create-dom');
 	if (!jToolDOM || jToolDOM.length === 0) {
 		// table标签 可以在新建element时可以更好的容错.
 		// div标签, 添加thead,tbody等表格标签时,只会对中间的文本进行创建
 		// table标签,在添加任务标签时,都会成功生成.且会对table类标签进行自动补全
-		var el = document.createElement('table');
+		let el = document.createElement('table');
 		el.id = 'jTool-create-dom';
 		el.style.display = 'none';
 		document.body.appendChild(el);
@@ -138,7 +138,7 @@ function createDOM(htmlString) {
 	}
 
 	jToolDOM.innerHTML = htmlString || '';
-	var childNodes = jToolDOM.childNodes;
+	let childNodes = jToolDOM.childNodes;
 
 	// 进行table类标签清理, 原因是在增加如th,td等table类标签时,浏览器会自动补全节点.
 	if (childNodes.length === 1 && !/<tbody|<TBODY/.test(htmlString) && childNodes[0].nodeName === 'TBODY') {
