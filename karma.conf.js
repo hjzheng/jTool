@@ -7,7 +7,7 @@ module.exports = function (config) {
 			'./test/test.index.js'
 		],
 		preprocessors: {
-			'./test/test.index.js': ['webpack', 'coverage']
+			'./test/test.index.js': ['webpack']
 		},
 		webpack: {
 			devtool: 'eval',
